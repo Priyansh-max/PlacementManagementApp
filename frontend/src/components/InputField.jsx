@@ -4,7 +4,7 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; 
 
-function InputField({ text, inputplaceholder, onChange, error, type }) {
+function InputField({ text, inputplaceholder, onChange, error, type}) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
 

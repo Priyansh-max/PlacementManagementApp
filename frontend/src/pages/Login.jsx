@@ -24,7 +24,7 @@ function Login(){
                     <img src={myimage} alt="JKLU" className="rounded-full h-[150px]"></img>
                 </div>
 
-                <div className="w-full max-w-64 sm:max-w-72 md:max-w-80 lg:max-w-[360px] px-2 py-5 space-y-4 bg-white rounded-lg shadow-2xl">
+                <div className="w-full max-w-64 sm:max-w-72 md:max-w-80 lg:max-w-[380px] px-2 py-5 space-y-4 bg-white rounded-lg shadow-2xl">
                     <Header heading="Login"></Header>
                     <InputField text="Email" inputplaceholder="name@jklu.edu.in" type="text"></InputField>
                     <InputField text="Password" inputplaceholder="*********" type="password"></InputField>
@@ -34,14 +34,14 @@ function Login(){
                             <span className="text-grey text-sm font-semibold space-x-2"> Stay signed in</span>
                         </div>
                         <div>
-                            <p className="text-blue-500 text-sm">Forget password?</p>
+                        <Link to="/troublesigning" className="font-semibold text-blue-500 text-sm hover:underline duration-300 ease-out-in">Forget password?</Link>
                         </div>
                     </div>
 
                     <ButtonComp text="Login"></ButtonComp>
 
                     <div className="flex items-center justify-center">
-                        <p className="font-semibold text-blue-500 text-sm">Create an account</p>
+                        <Link to="/signup" className="font-semibold text-blue-500 text-sm hover:underline duration-300 ease-out-in">Create an account</Link>
                     </div>
 
                 </div>
