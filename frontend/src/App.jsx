@@ -10,12 +10,16 @@ import Troublesigning from './pages/Troublesigning'
 import Troublesigningsuccess from './pages/Troublesigningsuccess'
 import Resetpassword from './pages/Resetpassword'
 import Resetpasswordsuccess from './pages/Resetpasswordsuccess'
+import StudentPage from './pages/StudentPage'
+import Admin from './pages/Admin'
+import ProfileBuilder from './pages/ProfileBuilder'
+
 
 function App() {
 
   return (
     <div>
-      <BrowserRouter>
+      {/* <BrowserRouter>
         <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/resetpassword" element={<Resetpassword />} />
@@ -23,8 +27,12 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/troublesigning" element={<Troublesigning />} />
             <Route path="/troublesigningsuccess" element={<Troublesigningsuccess />} />
+            <Route path="/studentpage" element={<StudentPage />} />
+            <Route path="/admin" element={<Admin />} />
         </Routes>
-      </BrowserRouter>
+      </BrowserRouter> */}
+      <StudentPage></StudentPage> 
+
     </div>
   )
 }

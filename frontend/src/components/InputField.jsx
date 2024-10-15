@@ -29,9 +29,8 @@ function InputField({ text, inputplaceholder, onChange, error, type}) {
             {isPasswordVisible ? <FaEyeSlash className="text-gray-600" /> : <FaEye className="text-gray-600" />}
           </div>
         )}
-
-        {error && <p className="text-red text-xs mt-5 italic">{error}</p>}
       </div>
+      {error && <p className="text-red text-xs mt-2 px-5 italic">{error}</p>}
     </div>
   );
 }

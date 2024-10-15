@@ -4,7 +4,7 @@ import React from "react";
 import Header from "../components/Header";
 import InputField from "../components/InputField";
 import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link , useNavigate } from 'react-router-dom';
 import ButtonComp from "../components/ButtonComp";
 import myimage from '../assets/jklulogo.png'
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -12,6 +12,10 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Login(){
     const [staySignedIn, setStaySignedIn] = useState(true);
+    const [Email , setEmail] = useState('');
+    const [Password , setPassword] = useState('');
+    const [Error , setError] = useState({});
+    const navigate = useNavigate();
 
     const handleCheckboxChange = () => {
         setStaySignedIn(!staySignedIn);
@@ -26,8 +30,12 @@ function Login(){
 
                 <div className="w-full max-w-64 sm:max-w-72 md:max-w-80 lg:max-w-[380px] px-2 py-5 space-y-4 bg-white rounded-lg shadow-2xl">
                     <Header heading="Login"></Header>
-                    <InputField text="Email" inputplaceholder="name@jklu.edu.in" type="text"></InputField>
-                    <InputField text="Password" inputplaceholder="*********" type="password"></InputField>
+                    <InputField onChange={(e) => {
+                        setEmail(e.target.value);
+                    }}text="Email" inputplaceholder="name@jklu.edu.in" type="text" error={Error.email}></InputField>
+                    <InputField onChange={(e) => {
+                        setPassword(e.target.value);
+                    }} text="Password" inputplaceholder="*********" type="password" error={Error.password}></InputField>
                     <div className="flex flex-col items-start justify-between space-y-2 sm:flex-row sm:items-center sm:space-y-0 px-5">
                         <div className="flex items-center space-x-1">
                             <input type="checkbox" checked={staySignedIn} onChange={handleCheckboxChange} className="form-checkbox h-3 w-3 text-blue-600 focus:border-transparent"/>
@@ -38,7 +46,17 @@ function Login(){
                         </div>
                     </div>
 
-                    <ButtonComp text="Login"></ButtonComp>
+                    <ButtonComp onClick={async () => {
+                        if(Email == "" || Password == ""){
+                            setError({
+                                email : Email === "" ? "Email is required*" : "",
+                                password : Password === "" ? "Password is required*" : "",
+                            })
+                        }
+                        else{
+                            navigate("/studentpage");
+                        }
+                    }}text="Login"></ButtonComp>
 
                     <div className="flex items-center justify-center">
                         <Link to="/signup" className="font-semibold text-blue-500 text-sm hover:underline duration-300 ease-out-in">Create an account</Link>

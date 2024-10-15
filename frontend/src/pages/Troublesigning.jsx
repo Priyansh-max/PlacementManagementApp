@@ -1,13 +1,18 @@
 /* eslint-disable react/no-unescaped-entities */
 // eslint-disable-next-line no-unused-vars
 import React from "react";
+import { useState } from "react";
 import Header from "../components/Header";
 import InputField from "../components/InputField";
 import myimage from '../assets/jklulogo.png'
 import ButtonComp from "../components/ButtonComp";
-import { Link } from 'react-router-dom';
+import { Link , useNavigate } from 'react-router-dom';
 
 function Troublesigning(){
+    const [Email , setEmail] = useState("");
+    const [Error , setError] = useState({});
+    const navigate = useNavigate();
+
     return (
 
         <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-slate-50 from-45% to-orange-200">
@@ -21,8 +26,19 @@ function Troublesigning(){
                     <div className="flex items-center justify-center px-5">
                         <p className="text-center text-md text-gray-400 font-semibold ">Chill out!! enter your email address below, and we'll send you a link to reset your password</p>
                     </div>
-                    <InputField text="Email" inputplaceholder="name@jklu.edu.in" type="text"></InputField>
-                    <ButtonComp text="Submit"></ButtonComp>
+                    <InputField onChange={(e) => {
+                        setEmail(e.target.value);
+                    }}text="Email" inputplaceholder="name@jklu.edu.in" type="text" error={Error.email}></InputField>
+                    <ButtonComp onClick={async () => {
+                        if(Email == ""){
+                            setError({
+                                email : Email === "" ? "Email is required" : "",
+                            })
+                        }
+                        else{
+                            navigate("/troublesigningsuccess");
+                        }
+                    }}text="Submit"></ButtonComp>
                     <div className="flex flex-row justify-center px-6">
                         <p className="text-sm font-semibold text-center mr-2 text-grey">Return to </p>
                         <Link to="/" className="font-semibold text-blue-500 text-sm hover:underline duration-300 ease-out-in">Sign in</Link>

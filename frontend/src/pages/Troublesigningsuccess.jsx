@@ -3,8 +3,11 @@ import React from "react";
 import Header from "../components/Header";
 import myimage from '../assets/jklulogo.png'
 import ButtonComp from "../components/ButtonComp";
+import { useNavigate } from 'react-router-dom';
 
 function Troublesigningsuccess(){
+    const navigate = useNavigate();
+
     return(
         <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-slate-50 from-45% to-orange-200">
             <div className="flex flex-col items-center w-full mt-10">
@@ -18,7 +21,10 @@ function Troublesigningsuccess(){
                         <p className="text-center text-md text-gray-400 font-semibold ">A link to reset your password has been sent to you on:</p>
                         <p className="text-center pt-1 text-md text-gray-600 font-semibold ">priyanshagarwal3381@gmail.com -demo email</p>
                     </div>
-                    <ButtonComp text="Return to Sign in"></ButtonComp>
+                    <ButtonComp onClick={() => {
+                        navigate("/");
+                    }} text="Return to Sign in"></ButtonComp>
+                    <div className="pt-0.5"></div>
                 </div>
             </div>
         </div>
