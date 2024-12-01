@@ -18,14 +18,98 @@ enum Role {
   ADMIN
 }
 
+enum Status {
+  ONGOING
+  ENDED
+}
+
+
 
 model User {
-  id       String   @id @default(uuid()) @db.Uuid
+  id       String   @id @default(uuid())
   createdAt  DateTime   @default(now())
   email    String   @unique
   password String
+  profile  Boolean @default(false)
   role     Role     @default(USER)
+  resume   Resume?
+  personalinfo  PersonalInfo?
+  educationinfo EducationInfo?
+  documents   Document?
+  registeredDrives  Drive[]
+}
+
+model Resume {
+  id       String @id @default(uuid())
+  resume   String
+  userId   String @unique
+  user     User  @relation(fields : [userId] ,references: [id])
 
 }
 
+model PersonalInfo {
+  id      String @id @default(uuid())
+  firstname   String
+  lastname    String
+  gender      String
+  dob         DateTime
+  contact     String
+  email       String
+  alternateEmail    String
+  userId  String @unique
+  user    User   @relation(fields: [userId] , references: [id])
+}
+
+model EducationInfo {
+  id      String @id @default(uuid())
+  rollno  String
+  degree  String
+  branch  String
+  startyear   Int
+  endyear     Int
+  cgpa        Float
+  percentage10       Float
+  percentage12       Float
+  userId  String @unique
+  user    User   @relation(fields: [userId] , references: [id])
+}
+
+model Document {
+  id       String @id @default(uuid())
+  transcript   String
+  marksheet10  String
+  marksheet12  String
+  userId   String @unique
+  user     User  @relation(fields : [userId] ,references: [id])
+}
+
+model Company{
+  id       String @id @default(uuid()) 
+  createdAt  DateTime @default(now())
+  name     String 
+  address  String
+  email    String @unique
+  contact_person  String
+  contact  String @unique
+  additionInfo String?
+  drives       Drive[]
+}
+
+model Drive{
+  id       String @id @default(uuid()) 
+  createdAt   DateTime @default(now())
+  cname     String 
+  imgUrl   String?
+  description   String
+  job_description   String
+  stipend     String
+  eligibility   String
+  deadline    DateTime
+  status       Status @default(ONGOING)
+  additionInfo String?
+  companyId   String  
+  company     Company  @relation(fields: [companyId], references: [id])
+  registeredUser  User[]
+  
+}
 

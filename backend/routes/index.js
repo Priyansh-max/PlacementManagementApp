@@ -8,7 +8,6 @@ const { z } = require('zod');
 const router = express.Router();
 const prisma = new PrismaClient();
 const secret = process.env.JWT_SECRET;
-const authmiddleware = require("../middleware/authmiddleware");
 const nodemailer = require('nodemailer');
 
 router.use('/users' , userRouter)
@@ -125,6 +124,8 @@ router.post('/login', async (req , res) => {
                 id: user.id,
                 email: user.email,
                 role: user.role,
+                profile : user.profile
+
             }
         });
     }
