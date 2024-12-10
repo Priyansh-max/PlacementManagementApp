@@ -15,6 +15,7 @@ datasource db {
 
 enum Role {
   USER
+  MODERATOR
   ADMIN
 }
 
@@ -23,6 +24,10 @@ enum Status {
   ENDED
 }
 
+enum JobStatus {
+  PLACED
+  UNPLACED
+}
 
 
 model User {
@@ -32,11 +37,13 @@ model User {
   password String
   profile  Boolean @default(false)
   role     Role     @default(USER)
+  jobstatus JobStatus @default(UNPLACED)
   resume   Resume?
   personalinfo  PersonalInfo?
   educationinfo EducationInfo?
   documents   Document?
-  registeredDrives  Drive[]
+  registeredDrives  UserDrive[]
+  placedStudent   studentPlacement?
 }
 
 model Resume {
@@ -90,16 +97,16 @@ model Company{
   address  String
   email    String @unique
   contact_person  String
-  contact  String @unique
+  contact  String? @unique
   additionInfo String?
   drives       Drive[]
+  PlacedStudents  studentPlacement[]
 }
 
 model Drive{
   id       String @id @default(uuid()) 
   createdAt   DateTime @default(now())
   cname     String 
-  imgUrl   String?
   description   String
   job_description   String
   stipend     String
@@ -109,7 +116,33 @@ model Drive{
   additionInfo String?
   companyId   String  
   company     Company  @relation(fields: [companyId], references: [id])
-  registeredUser  User[]
+  registeredUser  UserDrive[]
   
+}
+
+model UserDrive {
+  id               String   @id @default(uuid())
+  userId           String
+  driveId          String
+  registrationTime DateTime @default(now())
+  user             User     @relation(fields: [userId], references: [id])
+  drive            Drive    @relation(fields: [driveId], references: [id])
+
+  @@unique([userId, driveId])
+}
+
+model studentPlacement {
+  id               String   @id @default(uuid())
+  createdAt        DateTime @default(now())
+  userId           String   @unique
+  companyId        String
+  package          String
+  role             String
+  additionInfo     String
+  user             User     @relation(fields: [userId], references: [id])
+  company          Company    @relation(fields: [companyId], references: [id])
+
+  @@unique([userId, companyId]) 
+
 }
 

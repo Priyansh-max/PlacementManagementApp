@@ -9,10 +9,12 @@ const router = express.Router();
 const prisma = new PrismaClient();
 const secret = process.env.JWT_SECRET;
 const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 
 router.use('/users' , userRouter)
 router.use('/admin' , adminRouter)
 
+const verificationCodes = new Map();
 
 //zod validation
 const signupSchema = z.object({
@@ -20,7 +22,7 @@ const signupSchema = z.object({
         message: "Email must be in the format 'email@jklu.edu.in'",
     }),
     password: z.string().min(6, { message: "Password must be at least 6 characters long" }),
-    role: z.enum(['USER', 'ADMIN']).optional(),
+    role: z.enum(['USER','MODERATOR', 'ADMIN']).optional(),
 });
 
 const loginSchema = z.object({
@@ -45,7 +47,7 @@ const transporter = nodemailer.createTransport({
   });
 
 const passwordSchema = z.object({
-    password : z.string().min(6 , {message : "Password must be at least 6 characters long"}),
+    password : z.string().min(6 , {error : "Password must be at least 6 characters long"}),
 })
 
 
@@ -54,7 +56,7 @@ router.post('/signup', async (req , res) => {
     try {
         //user exist checkk
         const validatedData = signupSchema.parse(req.body);
-        const { email, password, role } = validatedData;
+        const { email, password , role } = validatedData;
 
         const existingUser = await prisma.user.findUnique({ where: { email } });
         if (existingUser) {
@@ -83,14 +85,11 @@ router.post('/signup', async (req , res) => {
                 id: newUser.id,
                 email: newUser.email,
                 role: newUser.role,
-
             }
         });
     }
-
     catch (error) {
         if (error instanceof z.ZodError) {
-            // Map the error to just show the message
             const errorMessages = error.errors.map(err => err.message);
             return res.status(400).json({ error: errorMessages.join(', ') });
         }
@@ -211,5 +210,47 @@ router.post('/resetpassword' , async(req , res) => {
 
     }
 })
+
+
+router.post('/send-verification-email', async (req, res) => {
+    try{
+        const { email }  = req.body
+        const verificationCode = crypto.randomInt(1000, 9999);
+        verificationCodes.set(email, verificationCode);
+
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Email Verification Code',
+            text: `Your verification code is: ${verificationCode}`,
+        });
+
+        res.status(200).json({ message: 'Verification email sent successfully' });
+
+    }catch(error){
+        res.status(500).json({ error: error.message });
+    }
+})
+
+router.post('/verify-code', (req, res) => {
+    try{
+        const { email, code } = req.body;
+
+        if (!email || !code) {
+            return res.status(400).json({ error: 'Email and code are required' });
+        }
+        const storedCode = verificationCodes.get(email);
+    
+        if (storedCode && storedCode.toString() === code) {
+            verificationCodes.delete(email);
+
+            return res.status(200).json({ message: 'Email verified successfully' });
+        }
+
+        res.status(400).json({ error: 'Invalid verification code' });
+    }catch(error){
+        res.status(500).json({ error: error.message });
+    }
+});
 
 module.exports = router;

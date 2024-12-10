@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const router = express.Router();
-const zod = require('zod');
+const { z } = require('zod');
 const jwt = require('jsonwebtoken');
 const authmiddleware = require('../middleware/authmiddleware');
 const cloudinary = require('cloudinary').v2;

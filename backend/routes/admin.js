@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const router = express.Router();
-const zod = require('zod');
+const { z } = require('zod');
 const jwt = require('jsonwebtoken');
 const { Parser } = require('json2csv');
 const authmiddleware = require("../middleware/authmiddleware");
@@ -244,6 +244,27 @@ router.get("/drive/users/:driveId" , authmiddleware , async(req , res) => {
         });
     }
 })
+//get all users data
+router.get("/userdata" ,authmiddleware , async(req , res) => {
+    try {
+        const users = await prisma.user.findMany({
+          include: {
+            resume: true,
+            personalinfo: true,
+            educationinfo: true,
+            documents: true,
+            registeredDrives: true,
+            placedStudent: true,
+          },
+        });
+
+        res.status(200).json(users);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ error: 'Failed to fetch users' });
+      }
+});
+
 
 //edit userdata , delete or add a record
 router.put("/drive/manage-users/:driveId", authmiddleware, async (req, res) => {
