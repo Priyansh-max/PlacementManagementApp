@@ -21,7 +21,7 @@ function InputField({ text, inputplaceholder, onChange, error, type}) {
           type={type === "password" && isPasswordVisible ? "text" : type} 
           placeholder={inputplaceholder}
           required
-          className={`rounded border border-grey focus:outline-none focus:ring-4 focus:ring-blue-400 transition-all duration-200 ease-out-in focus:border-transparent pl-2 py-1 w-full ${error ? "border-red" : "border-grey"}`}
+          className={`rounded border border-grey focus:outline-none focus:ring-4 focus:ring-blue-400 transition-all duration-200 ease-out-in focus:border-transparent pl-2 py-1 w-full ${error ? "border-red-500" : "border-grey"}`}
         />
 
         {type === "password" && (
@@ -30,7 +30,7 @@ function InputField({ text, inputplaceholder, onChange, error, type}) {
           </div>
         )}
       </div>
-      {error && <p className="text-red text-xs mt-2 px-5 italic">{error}</p>}
+      {error && <p className="text-red-500 text-xs mt-2 px-5 italic">{error}</p>}
     </div>
   );
 }

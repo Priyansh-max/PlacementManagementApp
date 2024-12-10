@@ -316,21 +316,21 @@ const ProfilePage = () => {
             </div>
             <div className="flex w-full p-2">
               <div className="w-1/2">
-                <ProfileInputField2 text="Start Year" type="number"></ProfileInputField2>
+                <ProfileInputField2 text="Start Year" type="number" min="2011"></ProfileInputField2>
               </div>
               <div className="w-1/2">
-                <ProfileInputField2 text="End Year" type="number"></ProfileInputField2>
+                <ProfileInputField2 text="End Year" type="number" min="2011"></ProfileInputField2>
               </div>
             </div>
             <div className="flex w-full p-2">
               <div className="w-1/3">
-                <ProfileInputField2 text="CGPA" step="0.01" type="number"></ProfileInputField2>
+                <ProfileInputField2 text="CGPA" step="0.01" type="number" min="0" max="10"></ProfileInputField2>
               </div>
               <div className="w-1/3">
-                <ProfileInputField2 text="Percentage of class 12th" step="0.01" type="number"></ProfileInputField2>
+                <ProfileInputField2 text="Percentage of class 12th" step="1" type="number" min="0" max="100"></ProfileInputField2>
               </div>
               <div className="w-1/3">
-                <ProfileInputField2 text="Percentage of class 10th" step="0.01" type="number"></ProfileInputField2>
+                <ProfileInputField2 text="Percentage of class 10th" step="1" type="number" min="0" max="100"></ProfileInputField2>
               </div>
             </div>
             <div className="flex flex-row items-center justify-between mt-2 pr-2">

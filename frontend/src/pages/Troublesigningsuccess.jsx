@@ -3,10 +3,13 @@ import React from "react";
 import Header from "../components/Header";
 import myimage from '../assets/jklulogo.png'
 import ButtonComp from "../components/ButtonComp";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate , useParams } from 'react-router-dom';
+import { decryptText } from "../utils/cryptoUtils.js";
 
 function Troublesigningsuccess(){
     const navigate = useNavigate();
+    const { encryptedEmail } = useParams();
+    const decryptedEmail = encryptedEmail ? decryptText(decodeURIComponent(encryptedEmail)) : "N/A";
 
     return(
         <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-slate-50 from-45% to-orange-200">
@@ -19,7 +22,7 @@ function Troublesigningsuccess(){
                     <Header heading="Email sent"></Header>
                     <div className="flex flex-col items-center justify-center px-5">
                         <p className="text-center text-md text-gray-400 font-semibold ">A link to reset your password has been sent to you on:</p>
-                        <p className="text-center pt-1 text-md text-gray-600 font-semibold ">priyanshagarwal3381@gmail.com -demo email</p>
+                        <p className="text-center pt-1 text-md text-gray-600 font-semibold ">{decryptedEmail}</p>
                     </div>
                     <ButtonComp onClick={() => {
                         navigate("/");

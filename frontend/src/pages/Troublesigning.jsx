@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 // eslint-disable-next-line no-unused-vars
 import React from "react";
@@ -7,11 +8,68 @@ import InputField from "../components/InputField";
 import myimage from '../assets/jklulogo.png'
 import ButtonComp from "../components/ButtonComp";
 import { Link , useNavigate } from 'react-router-dom';
+import { encryptText } from "../utils/cryptoUtils.js";
+import axios from "axios";
 
 function Troublesigning(){
     const [Email , setEmail] = useState("");
     const [Error , setError] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+
+    function validateEmail(email) {
+        const emailRegex = /^([a-zA-Z0-9._%+-]+)@jklu\.edu\.in$/;
+        return emailRegex.test(email);
+    }
+
+    const handleEncryptAndNavigate = async () => {
+        try {
+          // Check if the email field is empty
+          if (Email === "") {
+            setError({
+              email: Email === "" ? "Email is required*" : "",
+            });
+            return; // Stop execution if email is empty
+          }
+
+          if(Email !== "" && validateEmail(Email) === false){
+            setError({
+                invalid: validateEmail(Email) === false ? "Email should be of the form @jklu.edu.in*" : "",
+              });
+              return;
+          }
+
+          setIsLoading(true);
+      
+          // Clear previous errors if validation passes
+          setError({
+            email: "",
+            invalid : ""
+          });
+      
+          // Encrypt the email using the encryptText function
+          const encryptedEmail = encryptText(Email);
+
+          const response = await axios.post("http://localhost:3000/api/v1/forgetpassword", {
+            email: Email,
+          });
+    
+          if (response.status === 200) {
+            console.log("Forget password request successful:", response.data);
+            navigate(`/troublesigningsuccess/${encodeURIComponent(encryptedEmail)}`)
+          }
+
+        } catch (error) {
+          console.error("Error during email encryption or navigation:", error);
+          setError({
+            general: "An unexpected error occurred. Please try again later.",
+          });
+        }finally {
+            // Stop loading after the API call completes
+            setIsLoading(false);
+        }
+    };
+      
 
     return (
 
@@ -28,17 +86,11 @@ function Troublesigning(){
                     </div>
                     <InputField onChange={(e) => {
                         setEmail(e.target.value);
-                    }}text="Email" inputplaceholder="name@jklu.edu.in" type="text" error={Error.email}></InputField>
-                    <ButtonComp onClick={async () => {
-                        if(Email == ""){
-                            setError({
-                                email : Email === "" ? "Email is required" : "",
-                            })
-                        }
-                        else{
-                            navigate("/troublesigningsuccess");
-                        }
-                    }}text="Submit"></ButtonComp>
+                    }}text="Email" inputplaceholder="name@jklu.edu.in" type="text" error={`${Error.email || ""} ${Error.invalid || ""}`.trim()}></InputField>
+                    <ButtonComp onClick={handleEncryptAndNavigate}
+                    text={isLoading ? "Processing..." : "Submit"} disabled={isLoading}></ButtonComp>
+                    {Error.general && <p className="italic text-center text-red-500 text-xs mt-1">{Error.general}</p>}
+
                     <div className="flex flex-row justify-center px-6">
                         <p className="text-sm font-semibold text-center mr-2 text-grey">Return to </p>
                         <Link to="/" className="font-semibold text-blue-500 text-sm hover:underline duration-300 ease-out-in">Sign in</Link>

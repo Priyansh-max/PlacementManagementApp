@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { useState } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import React, { useEffect } from 'react';
+import { Route, Routes, useNavigate , Navigate} from 'react-router-dom';
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -10,27 +10,50 @@ import Troublesigning from './pages/Troublesigning'
 import Troublesigningsuccess from './pages/Troublesigningsuccess'
 import Resetpassword from './pages/Resetpassword'
 import Resetpasswordsuccess from './pages/Resetpasswordsuccess'
-import StudentPage from './pages/StudentPage'
 import Admin from './pages/Admin'
 import ProfileBuilder from './pages/ProfileBuilder'
+import Student from './pages/Student'
+import UserDisplayAdmin from './pages/UserDisplayAdmin'
+import UserDisplayCompany from './pages/UserDisplayCompany';
+
 
 
 function App() {
 
+  const navigate = useNavigate();
+
+  // Store the current route in localStorage before unloading the page
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      localStorage.setItem('lastRoute', window.location.pathname);
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   return (
     <div>
-      <BrowserRouter>
         <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/resetpassword" element={<Resetpassword />} />
             <Route path="/resetpasswordsuccess" element={<Resetpasswordsuccess />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/troublesigning" element={<Troublesigning />} />
-            <Route path="/troublesigningsuccess" element={<Troublesigningsuccess />} />
-            <Route path="/studentpage" element={<StudentPage />} />
+            <Route path="/troublesigningsuccess/:encryptedEmail" element={<Troublesigningsuccess />} />
+            <Route path="/profile" element={<ProfileBuilder />} />
+            <Route path="/studentpage" element={<Student />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/drive/users/:driveId" element={<UserDisplayAdmin />} />
+            <Route path="/admin/company/users/:companyId" element={<UserDisplayCompany />} />
         </Routes>
-      </BrowserRouter>
+      {/* <ProfileBuilder></ProfileBuilder> */}
+      {/* <Admin></Admin> */}
+      {/* <StudentPage></StudentPage> */}
+      {/* <Student></Student> */}
 
 
 

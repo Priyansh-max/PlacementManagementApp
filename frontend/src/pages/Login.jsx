@@ -3,23 +3,67 @@
 import React from "react";
 import Header from "../components/Header";
 import InputField from "../components/InputField";
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import { Link , useNavigate } from 'react-router-dom';
 import ButtonComp from "../components/ButtonComp";
-import myimage from '../assets/jklulogo.png'
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import myimage from '../assets/jklulogo.png';
+import axios from "axios";
 
 
 function Login(){
     const [staySignedIn, setStaySignedIn] = useState(true);
-    const [Email , setEmail] = useState('');
-    const [Password , setPassword] = useState('');
+    const [email , setEmail] = useState('');
+    const [password , setPassword] = useState('');
     const [Error , setError] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+          navigate("/studentpage");
+        }
+    }, [navigate]); // Dependency array ensures navigation is stable
 
     const handleCheckboxChange = () => {
         setStaySignedIn(!staySignedIn);
     };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if(email == "" || password == ""){
+            setError({
+                email : email === "" ? "Username is required*" : "",
+                password : password === "" ? "Password is required*" : "",
+            })
+        }
+        else{
+            setError({})
+            setIsLoading(true)
+            try{
+                const response = await axios.post("http://localhost:3000/api/v1/login", {
+                    email,
+                    password
+                }) 
+    
+                if(response.status == 200){
+                    localStorage.setItem("token", response.data.token);
+                    setIsLoading(false);
+                    navigate("/studentpage")
+                }
+
+    
+            }catch(error){
+                if (error.response && error.response.data.message) {
+                    setError({ message: error.response.data.message });
+                } else {
+                    setError({ message: "Something went wrong. Please try again later" });
+                }
+            }finally {
+                setIsLoading(false);
+            }
+        }       
+    }
 
     return (
         <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-slate-50 from-45% to-orange-200">
@@ -45,18 +89,11 @@ function Login(){
                         <Link to="/troublesigning" className="font-semibold text-blue-500 text-sm hover:underline duration-300 ease-out-in">Forget password?</Link>
                         </div>
                     </div>
+                    <ButtonComp onClick={handleSubmit}
+                    text={isLoading ? "Logging in..." : "Login"}>
 
-                    <ButtonComp onClick={async () => {
-                        if(Email == "" || Password == ""){
-                            setError({
-                                email : Email === "" ? "Email is required*" : "",
-                                password : Password === "" ? "Password is required*" : "",
-                            })
-                        }
-                        else{
-                            navigate("/studentpage");
-                        }
-                    }}text="Login"></ButtonComp>
+                    </ButtonComp>
+                    {Error.message && <p className="italic text-center text-red-500 text-xs mt-1">{Error.message}</p>}
 
                     <div className="flex items-center justify-center">
                         <Link to="/signup" className="font-semibold text-blue-500 text-sm hover:underline duration-300 ease-out-in">Create an account</Link>

@@ -1,0 +1,69 @@
+.scrollbar-custom {
+    overflow-y: auto;
+    transition: scrollbar-color 0.5s ease-in-out;
+  }
+  
+  .scrollbar-hide {
+    scrollbar-color: transparent transparent; /* Hides scrollbar colors */
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 8px; /* Scrollbar width */
+    transition: opacity 0.5s ease-in-out; /* Smooth fade-out effect */
+  }
+  
+  .scrollbar-custom.scrollbar-hide::-webkit-scrollbar {
+    opacity: 0; /* Hides scrollbar for WebKit browsers */
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background-color: #C0C0C0; /* Thumb color */
+    border-radius: 10px;
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar-track {
+    background-color: #f3f4f6;
+    border-radius: 10px;
+  }
+
+  .modal-enter {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  .modal-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .modal-exit {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .modal-exit-active {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .overlay {
+    position: fixed; /* Fixed positioning to cover the whole screen */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's on top of other content */
+  }
+  
+  .overlay-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 100%;
+  }
+  
+  
